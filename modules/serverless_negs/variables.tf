@@ -299,3 +299,16 @@ variable "http_keep_alive_timeout_sec" {
   type        = number
   default     = null
 }
+
+variable "host_routing" {
+  description = <<EOT
+Map of hostnames to backend keys (keys from var.backends).
+Example:
+{
+  "api.dev.example.com" = "api"
+  "web.dev.example.com" = "web"
+}
+EOT
+  type        = map(string)
+  default     = {}
+}

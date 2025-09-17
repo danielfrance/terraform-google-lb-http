@@ -15,8 +15,8 @@
  */
 
 output "backend_services" {
-  description = "The backend service resources."
-  value       = google_compute_backend_service.default
+  description = "Map of backend keys to backend service self_links"
+  value       = { for k, v in google_compute_backend_service.default : k => v.self_link }
   sensitive   = true // can contain sensitive iap_config
 }
 
