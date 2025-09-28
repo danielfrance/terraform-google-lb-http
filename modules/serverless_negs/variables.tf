@@ -316,7 +316,7 @@ EOT
 variable "default_backend_key" {
   description = <<EOT
 Optional key from var.backends to use as the URL map default_service.
-If unset, we fall back to the current behavior (the first key in var.backends).
+If unset, we fall back to the current behavior (the first key in var.backends)
 EOT
   type        = string
   default     = null
