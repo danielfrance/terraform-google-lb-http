@@ -25,6 +25,10 @@ locals {
 
   is_internal      = var.load_balancing_scheme == "INTERNAL_SELF_MANAGED"
   internal_network = local.is_internal ? var.network : null
+
+  # Preserve current behavior if caller doesn't set default_backend_key
+  _fallback_default_key = length(keys(var.backends)) > 0 ? keys(var.backends)[0] : null
+  _default_key          = coalesce(var.default_backend_key, local._fallback_default_key)
 }
 
 ### IPv4 block ###
@@ -162,11 +166,12 @@ resource "google_compute_managed_ssl_certificate" "default" {
 }
 
 resource "google_compute_url_map" "default" {
-  provider        = google-beta
-  project         = var.project
-  count           = var.create_url_map ? 1 : 0
-  name            = "${var.name}-url-map"
-  default_service = google_compute_backend_service.default[keys(var.backends)[0]].self_link
+  provider = google-beta
+  project  = var.project
+  count    = var.create_url_map ? 1 : 0
+  name     = "${var.name}-url-map"
+  # default_service = google_compute_backend_service.default[keys(var.backends)[0]].self_link
+  default_service = var.default_backend_self_link != null ? var.default_backend_self_link : google_compute_backend_service.default[local._default_key].self_link
 
   # Add host-level routing when provided
   dynamic "host_rule" {

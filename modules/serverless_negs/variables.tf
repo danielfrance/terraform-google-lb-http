@@ -312,3 +312,21 @@ EOT
   type        = map(string)
   default     = {}
 }
+
+variable "default_backend_key" {
+  description = <<EOT
+Optional key from var.backends to use as the URL map default_service.
+If unset, we fall back to the current behavior (the first key in var.backends).
+EOT
+  type        = string
+  default     = null
+}
+
+variable "default_backend_self_link" {
+  description = <<EOT
+Optional explicit self_link to use as default_service (advanced).
+If set, it overrides default_backend_key and the implicit "first key" behavior.
+EOT
+  type        = string
+  default     = null
+}
